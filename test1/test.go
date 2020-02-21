@@ -1,0 +1,62 @@
+package main
+
+// import (
+// 	"fmt"
+// 	"net/http"
+// )
+
+// type Hello struct{}
+
+// func (h Hello) ServeHTTP(
+// 	w http.ResponseWriter,
+// 	r *http.Request) {
+// 	fmt.Fprint(w, "Hello!")
+// }
+
+// func main() {
+// 	var h Hello
+// 	http.ListenAndServe("localhost:4000", h)
+// }
+
+import (
+	"io"
+	"os"
+)
+
+func main() {
+	// 입력파일 열기
+	fi, err := os.Open("O:\\go_for_server\\test1.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer fi.Close()
+
+	// 출력파일 생성
+	fo, err := os.Create("O:\\go_for_server\\2.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer fo.Close()
+
+	buff := make([]byte, 1024)
+
+	// 루프
+	for {
+		// 읽기
+		cnt, err := fi.Read(buff)
+		if err != nil && err != io.EOF {
+			panic(err)
+		}
+
+		// 끝이면 루프 종료
+		if cnt == 0 {
+			break
+		}
+
+		// 쓰기
+		_, err = fo.Write(buff[:cnt])
+		if err != nil {
+			panic(err)
+		}
+	}
+}
